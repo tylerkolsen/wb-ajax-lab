@@ -73,3 +73,37 @@ function iTunesSearch(evt) {
   // `Artist: ${artistName} Song: ${trackName}`
 }
 document.querySelector('#itunes-search-form').addEventListener('submit', iTunesSearch);
+
+
+async function getPokeInfo(evt) {
+  evt.preventDefault()
+
+  const pokeNum = document.querySelector('#pokenumber').value
+  if (pokeNum < 1 || pokeNum > 1025) {
+    return document.querySelector('#poke-status').innerText = "Not a valid Pokemon. Try Again"
+  }
+  const response = await axios.get(`https://pokeapi.co/api/v2/pokemon/${pokeNum}`)
+  const pokeDiv = document.querySelector('#poke-info')
+  let pokeInfoStr = ''
+  const name = response.data.name
+  const abilityArr = response.data.abilities
+  const typeArr = response.data.types
+  let typeCombo = []
+  const spriteUrl = response.data.sprites.front_default
+
+  pokeInfoStr += `<p>Name: ${name}</p>`
+  for (const abi of abilityArr) {
+    pokeInfoStr += `<p>Ability ${abilityArr.indexOf(abi)+1}: ${abi.ability.name}</p>`
+  }
+  for (const type of typeArr) {
+    typeCombo.push(type.type.name)
+  }
+  pokeInfoStr += `<p>Type: ${typeCombo.join(", ")}</p>`
+
+  pokeInfoStr += `<img src="${spriteUrl}">`
+
+
+  pokeDiv.innerHTML = pokeInfoStr
+}
+
+document.querySelector('#pokemon-form').addEventListener('submit', getPokeInfo)
