@@ -24,6 +24,15 @@ app.get('/', (req, res) => {
 
 app.get('/weather.txt', (req, res) => {
   const zipcode = req.query.zipcode;
+  if (WEATHER[zipcode]) {
+    res.send({
+      forecast : WEATHER[zipcode].forecast
+    })
+  } else {
+    res.send({
+      forecast : DEFAULT_FORECAST
+    })
+  }
   // TODO: Get the weather for this zipcode and return the forecast if available.
   // If not, return the default forecast.
 })
@@ -47,5 +56,6 @@ app.post('/order-cookies.json', (req, res) => {
   }
   res.json({resultCode: resultCode, message: message});
 })
+
 
 ViteExpress.listen(app, port, () => console.log(`Server running on http://localhost:${port}`));
